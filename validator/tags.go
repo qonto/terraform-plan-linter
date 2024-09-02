@@ -25,7 +25,7 @@ func validateTags(rc ResourceContext, rule config.Rule) []ValidationIssue {
 			NewError(
 				rc.Path,
 				fmt.Sprintf("has invalid '%s' tag value", rule.Key),
-				fmt.Sprintf("%s \nShould be one of %v)",
+				fmt.Sprintf("%s \nShould be one of %v",
 					tagValue, strings.Join(rule.PossibleValues, ", "),
 				),
 			),

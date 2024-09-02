@@ -31,3 +31,13 @@ rules:
       url: https://myapi.com/possible_values # Optional, otherwise it will use possible_values
 ```
 
+## Example output
+
+```bash
+./terraform-plan-linter /home/user/terraform/staging/tfplan.json
+Validation completed. The following issues were found:
+ERROR resource module.user_profiles.aws_s3_bucket.default has invalid 'Owner' tag value: infrastructure
+Should be one of product, engineering, finance, marketing, sales
+ERROR resource module.analytics.aws_s3_bucket.default has invalid 'Owner' tag value: infrastructure
+Should be one of product, engineering, finance, marketing, sales
+```
