@@ -1,0 +1,36 @@
+name: release
+run-name: building and publishing new release
+on:  # yamllint disable-line rule:truthy
+  push:
+    # run only against tags
+    tags:
+      - "*"
+permissions:
+  contents: write  # allows the action to create a Github release
+  id-token: write  # This is required for requesting the AWS JWT
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - run: git fetch --force --tags
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Set up QEMU for ARM64 build
+        uses: docker/setup-qemu-action@v3
+
+      - uses: goreleaser/goreleaser-action@v5
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

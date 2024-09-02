@@ -48,6 +48,15 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	versionCmd := &cobra.Command{
+		Use:   "version",
+		Short: "Print the version number",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Version: %s\nCommit: %s\nDate: %s\n", Version, CommitSHA, Date)
+		},
+	}
+	rootCmd.AddCommand(versionCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

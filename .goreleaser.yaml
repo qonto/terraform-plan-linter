@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+---
+env:
+  - BUILD_INFO_PACKAGE_PATH=github.com/qonto/terraform-plan-linter/cmd
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - '-s'
+      - '-w'
+      - '-X "{{ .Env.BUILD_INFO_PACKAGE_PATH }}.Version={{.Version}}"'
+      - '-X "{{ .Env.BUILD_INFO_PACKAGE_PATH }}.CommitSHA={{.Commit}}"'
+      - '-X "{{ .Env.BUILD_INFO_PACKAGE_PATH }}.Date={{.Date}}"'
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^test:"
+      - "^chore"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: Dependency updates
+      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
+      order: 300
+    - title: "New Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 100
+    - title: "Security updates"
+      regexp: '^.*?sec(\([[:word:]]+\))??!?:.+$'
+      order: 150
+    - title: "Bug fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 200
+    - title: "Documentation updates"
+      regexp: ^.*?doc(\([[:word:]]+\))??!?:.+$
+      order: 400
+    - title: "Build process updates"
+      regexp: ^.*?build(\([[:word:]]+\))??!?:.+$
+      order: 400
+    - title: Other work
+      order: 9999
+
+release:
+  github:
+    owner: qonto
+    name: terraform-plan-linter
+  name_template: "v{{.Version}}"
+  footer: |
+    **Full Changelog**: https://github.com/qonto/terraform-plan-linter/compare/{{ .PreviousTag }}...{{ .Tag }}
