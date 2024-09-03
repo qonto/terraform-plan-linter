@@ -2,6 +2,7 @@ package validator
 
 import (
 	"fmt"
+
 	"github.com/fatih/color"
 )
 
@@ -17,6 +18,10 @@ type ValidationIssue struct {
 	Message  string
 	KeyError string
 	Path     string
+}
+
+func init() {
+	color.NoColor = false // Force colorization
 }
 
 var (
